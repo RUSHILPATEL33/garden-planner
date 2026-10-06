@@ -1,0 +1,106 @@
+:root {
+  --soil: #2f4a32;
+  --leaf: #4c7a4a;
+  --sun: #f4e3b2;
+  --paper: #fbf7ef;
+  --ink: #1d2a1e;
+  --muted: #5b675c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, #dce8c8 0, transparent 42%),
+    linear-gradient(160deg, #eef4e4, #d7e3c4 55%, #c5d6b0);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.card {
+  width: min(36rem, 100%);
+  background: var(--paper);
+  border: 1px solid #c9d4b4;
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 18px 40px rgba(47, 74, 50, 0.12);
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+  color: var(--leaf);
+}
+
+h1 {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 2.1rem;
+}
+
+.lede {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+label {
+  display: block;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #b7c4a6;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+}
+
+button {
+  margin-top: 0.9rem;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: var(--soil);
+  color: var(--sun);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+#result {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed #c3cfb2;
+}
+
+.season {
+  margin: 0 0 0.6rem;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.9rem;
+  color: var(--leaf);
+  text-transform: capitalize;
+}
+
+#advice {
+  white-space: pre-wrap;
+  line-height: 1.55;
+}

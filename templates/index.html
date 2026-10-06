@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Garden Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="card">
+      <p class="eyebrow">India · this week</p>
+      <h1>Garden Planner</h1>
+      <p class="lede">
+        Enter your city. We pick the local season (monsoon, winter, or summer)
+        and ask a local open model what to plant this week.
+      </p>
+
+      <form id="planner-form">
+        <label for="city">City</label>
+        <input
+          id="city"
+          name="city"
+          type="text"
+          placeholder="e.g. Pune, Chennai, Guwahati"
+          autocomplete="address-level2"
+          required
+        />
+        <button type="submit" id="ask-btn">What should I plant?</button>
+      </form>
+
+      <section id="result" hidden>
+        <p class="season" id="season-line"></p>
+        <div id="advice"></div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("planner-form");
+      const cityInput = document.getElementById("city");
+      const button = document.getElementById("ask-btn");
+      const result = document.getElementById("result");
+      const seasonLine = document.getElementById("season-line");
+      const advice = document.getElementById("advice");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const city = cityInput.value.trim();
+        if (!city) return;
+
+        button.disabled = true;
+        button.textContent = "Asking the garden…";
+        result.hidden = false;
+        seasonLine.textContent = "";
+        advice.textContent = "Talking to the local model. This can take a little while on first run.";
+
+        try {
+          const response = await fetch("/plant", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ city }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            seasonLine.textContent = "";
+            advice.textContent = data.error || "Something went wrong.";
+            return;
+          }
+          seasonLine.textContent =
+            data.city + " · " + data.season + " season";
+          advice.textContent = data.advice;
+        } catch (err) {
+          seasonLine.textContent = "";
+          advice.textContent = "Could not reach the Garden Planner server.";
+        } finally {
+          button.disabled = false;
+          button.textContent = "What should I plant?";
+        }
+      });
+    </script>
+  </body>
+</html>
