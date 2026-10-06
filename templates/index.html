@@ -35,6 +35,49 @@
     </main>
 
     <script>
+      function escapeHtml(text) {
+        return String(text)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function inlineMarkdown(text) {
+        return text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      }
+
+      function renderAdvice(raw) {
+        const lines = escapeHtml(raw).split(/\r?\n/);
+        const parts = [];
+        let inList = false;
+
+        const closeList = () => {
+          if (inList) {
+            parts.push("</ol>");
+            inList = false;
+          }
+        };
+
+        for (const line of lines) {
+          const numbered = line.match(/^\s*\d+\.\s+(.*)$/);
+          if (numbered) {
+            if (!inList) {
+              parts.push("<ol>");
+              inList = true;
+            }
+            parts.push("<li>" + inlineMarkdown(numbered[1]) + "</li>");
+            continue;
+          }
+          closeList();
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+          parts.push("<p>" + inlineMarkdown(trimmed) + "</p>");
+        }
+        closeList();
+        return parts.join("");
+      }
+
       const form = document.getElementById("planner-form");
       const cityInput = document.getElementById("city");
       const button = document.getElementById("ask-btn");
@@ -67,7 +110,7 @@
           }
           seasonLine.textContent =
             data.city + " · " + data.season + " season";
-          advice.textContent = data.advice;
+          advice.innerHTML = renderAdvice(data.advice);
         } catch (err) {
           seasonLine.textContent = "";
           advice.textContent = "Could not reach the Garden Planner server.";

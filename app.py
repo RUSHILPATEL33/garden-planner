@@ -24,22 +24,29 @@ def india_season(today=None):
 
 def ask_ollama(city, season):
     prompt = (
-        f"You are a practical kitchen-garden advisor for India.\n"
+        "You are a kitchen-garden advisor. The gardener lives in India.\n"
         f"City: {city}\n"
-        f"Current season: {season}\n"
-        f"Today: {date.today().isoformat()}\n\n"
-        "Recommend what a home gardener should plant this week. "
-        "Keep the answer short (about 120-180 words). Include:\n"
-        "1) 4-6 crops that fit this season and a typical Indian climate for that city\n"
-        "2) One planting tip for this week\n"
-        "3) One caution (heat, rain, frost, pests) if relevant\n"
-        "Write in plain language. Do not mention that you are an AI."
+        f"Season: {season}\n"
+        f"Date: {date.today().isoformat()}\n\n"
+        "Climate you must follow:\n"
+        "- October through February is dry and mild in most of India.\n"
+        "- Do not assume frost. Most cities, including Gujarat, do not get frost.\n"
+        "- Do not assume winter rains. Winter gardens are usually irrigated.\n\n"
+        "Output rules:\n"
+        "- At most 5 plants to sow or transplant this week.\n"
+        "- Numbered list, one line per plant: **Common name** — one short reason.\n"
+        "- After the list, one line starting with Tip: (a single practical tip).\n"
+        "- No intro, no outro, no extra sections, no caveats about being an AI.\n"
+        "- Never list the same vegetable twice under different names "
+        "(examples of duplicates to avoid: coriander/cilantro, palak/spinach, "
+        "methi/fenugreek, brinjal/eggplant, bhindi/okra/ladyfinger). "
+        "Use one common Indian name per crop.\n"
     )
     payload = {
         "model": OLLAMA_MODEL,
         "prompt": prompt,
         "stream": False,
-        "options": {"temperature": 0.4, "num_predict": 350},
+        "options": {"temperature": 0.3, "num_predict": 220},
     }
     body = json.dumps(payload).encode("utf-8")
     req = Request(
